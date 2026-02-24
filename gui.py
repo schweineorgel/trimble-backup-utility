@@ -41,7 +41,8 @@ class AboutDialog(QDialog):
         adb_version = get_adb_version()
 
         self.setWindowFlags(
-            Qt.WindowType.Dialog |
+            Qt.WindowType.Window |
+            Qt.WindowType.CustomizeWindowHint |
             Qt.WindowType.WindowTitleHint |
             Qt.WindowType.WindowCloseButtonHint
         )
