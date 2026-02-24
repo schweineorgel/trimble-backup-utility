@@ -329,7 +329,7 @@ class MainWindow(QMainWindow):
         right_layout.addWidget(options_group)
 
         self.folder_checks = []
-        self.deep_csv_check = None
+        self.extra_files_check = None
 
         button_row = QHBoxLayout()
         button_row.addWidget(self.backup_button)
@@ -408,13 +408,13 @@ class MainWindow(QMainWindow):
             self.folder_container_layout.addWidget(checkbox)
             self.folder_checks.append(checkbox)
 
-        # Deep CSV option (always present)
-        self.deep_csv_check = QCheckBox(
-            "Buscar archivos .csv adicionales"
+        # Extra project file scan option
+        self.extra_files_check = QCheckBox(
+            "Buscar archivos adicionales de proyecto (.csv, .dxf, .ttm)"
         )
-        self.deep_csv_check.setChecked(False)
+        self.extra_files_check.setChecked(False)
 
-        self.folder_container_layout.addWidget(self.deep_csv_check)
+        self.folder_container_layout.addWidget(self.extra_files_check)
 
     # -------------------------
     # Image animation
@@ -479,7 +479,7 @@ class MainWindow(QMainWindow):
                 widget.deleteLater()
 
         self.folder_checks.clear()
-        self.deep_csv_check = None
+        self.extra_files_check = None
         self.device_compatible = None
 
         if self.backup_active and hasattr(self, "worker") and not self.user_cancelled:
@@ -634,7 +634,7 @@ class MainWindow(QMainWindow):
             if cb.isChecked()
         ]
 
-        deep_scan = self.deep_csv_check.isChecked() if self.deep_csv_check else False
+        deep_scan = self.extra_files_check.isChecked() if self.extra_files_check else False
 
         self.thread = QThread()
         self.worker = BackupWorker(

@@ -3,6 +3,98 @@ from datetime import datetime
 from config import BACKUP_ROOT
 from adb import run_adb_command, get_connected_device
 
+EXTRA_BACKUP_EXTENSIONS = [
+    ".csv",
+    ".dxf",
+    ".dwg",
+    ".ttm",
+    ".job",
+    ".jxl",
+    ".t02",
+    ".t04",
+    ".dat",
+    ".rnx",
+    ".obs",
+    ".nav",
+    ".shp",
+    ".dbf",
+    ".prj",
+    ".kml",
+    ".kmz",
+    ".txt",
+    ".asc",
+    ".xml",
+]
+
+def scan_and_pull_extra_directories(
+    device,
+    backup_path,
+    selected_folders,
+    log_callback,
+    is_cancelled
+):
+    log_callback("\nBuscando archivos adicionales (.csv, .dxf, .ttm)...")
+
+    result = run_adb_command(
+        ["-s", device, "shell", "ls", "-R", "/sdcard"],
+        capture_output=True
+    )
+
+    if not result:
+        log_callback("No se pudo escanear almacenamiento.")
+        return True
+
+    current_dir = ""
+    directories_to_pull = set()
+
+    for line in result.splitlines():
+        if is_cancelled():
+            return False
+
+        line = line.strip()
+        if not line:
+            continue
+
+        # Detect directory headers from ls -R
+        if line.endswith(":"):
+            current_dir = line[:-1]
+            continue
+
+        for ext in EXTRA_BACKUP_EXTENSIONS:
+            if line.lower().endswith(ext):
+                full_dir = current_dir
+
+                # Skip if already included in selected folders
+                if any(full_dir.startswith(folder) for folder in selected_folders):
+                    break
+
+                if not full_dir.startswith("/"):
+                    break
+
+                directories_to_pull.add(full_dir)
+                break
+
+    if not directories_to_pull:
+        log_callback("No se encontraron directorios adicionales.")
+        return True
+
+    extras_root = os.path.join(backup_path, "Directorios extra")
+    os.makedirs(extras_root, exist_ok=True)
+
+    for remote_dir in sorted(directories_to_pull):
+
+        if is_cancelled():
+            return False
+
+        log_callback(f"Respaldando directorio adicional: {remote_dir}")
+
+        run_adb_command(
+            ["-s", device, "pull", remote_dir, extras_root],
+            log_callback=log_callback,
+            is_cancelled=is_cancelled
+        )
+
+    return True
 
 def create_backup_directory(model, serial, ot, technician, android_version):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -107,63 +199,18 @@ def run_backup(
                 return False
 
             # log_callback(f"\nRespaldando: {folder}")
-        # Deep CSV scan
+        # Deep scan
         if deep_scan and not is_cancelled():
-            log_callback("\nBuscando archivos .csv adicionales...")
-
-            result = run_adb_command(
-                ["-s", device, "shell", "ls", "-R", "/sdcard"],
-                capture_output=True
+            success = scan_and_pull_extra_directories(
+                device,
+                backup_path,
+                selected_folders,
+                log_callback,
+                is_cancelled
             )
 
-            # log_callback("DEBUG RAW FIND OUTPUT:")
-            # log_callback(repr(result))
-
-            current_dir = ""
-            csv_files = []
-
-            if result:
-                for line in result.splitlines():
-                    line = line.strip()
-
-                    if not line:
-                        continue
-
-                    if line.endswith(":"):
-                        current_dir = line[:-1]
-                        continue
-
-                    if line.lower().endswith(".csv"):
-                        full_path = f"{current_dir}/{line}"
-                        csv_files.append(full_path)
-            # log_callback(f"CSV encontrados: {len(csv_files)}")
-            csv_to_backup = []
-
-            for csv_file in csv_files:
-                if any(csv_file.startswith(folder) for folder in selected_folders):
-                    continue
-                if not csv_file.startswith("/"):
-                    continue
-                csv_to_backup.append(csv_file)
-
-            if not csv_to_backup:
-                log_callback("No se encontraron archivos .csv adicionales")
-            else:
-                csv_folder = os.path.join(backup_path, "csv")
-                os.makedirs(csv_folder, exist_ok=True)
-
-                for csv_file in csv_to_backup:
-
-                    if is_cancelled():
-                        return False
-
-                    log_callback(f"Respaldando .csv: {csv_file}")
-
-                    run_adb_command(
-                        ["-s", device, "pull", csv_file, csv_folder],
-                        log_callback=log_callback,
-                        is_cancelled=is_cancelled
-                    )
+            if not success:
+                return False
 
         return True
 
