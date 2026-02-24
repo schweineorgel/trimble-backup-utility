@@ -32,6 +32,8 @@ MODEL_IMAGES = {
     "TCU5": "assets/tcu5.png",
     "TDC6": "assets/tdc6.png",
     "TDC600": "assets/tdc600.png",
+    "TDC600_1": "assets/tdc600.png",
+    "TDC600_2": "assets/tdc600.png",
     "TDC100": "assets/tdc100.png",
     # Spectra
     "MobileMapper6": "assets/mobilemapper6.png",

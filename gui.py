@@ -534,9 +534,9 @@ class MainWindow(QMainWindow):
 
         device_family = None
 
-        if model in TRIMBLE_MODELS:
+        if any(model.startswith(prefix) for prefix in TRIMBLE_MODELS):
             device_family = "trimble"
-        elif model in SPECTRA_MODELS:
+        elif any(model.startswith(prefix) for prefix in SPECTRA_MODELS):
             device_family = "spectra"
 
         if not device_family:
