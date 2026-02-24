@@ -88,8 +88,23 @@ def scan_and_pull_extra_directories(
 
         log_callback(f"Respaldando directorio adicional: {remote_dir}")
 
+        relative_remote_path = remote_dir
+
+        # Remove leading /
+        relative_remote_path = relative_remote_path.lstrip("/")
+
+        # Remove sdcard root
+        if relative_remote_path.lower().startswith("sdcard/"):
+            relative_remote_path = relative_remote_path[len("sdcard/"):]
+
+        # Build local path that mirrors structure
+        local_target_dir = os.path.join(extras_root, relative_remote_path)
+
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(local_target_dir), exist_ok=True)
+
         run_adb_command(
-            ["-s", device, "pull", remote_dir, extras_root],
+            ["-s", device, "pull", remote_dir, local_target_dir],
             log_callback=log_callback,
             is_cancelled=is_cancelled
         )
