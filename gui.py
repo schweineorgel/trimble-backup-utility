@@ -410,9 +410,9 @@ class MainWindow(QMainWindow):
 
         # Extra project file scan option
         self.extra_files_check = QCheckBox(
-            "Buscar archivos adicionales de proyecto (.csv, .dxf, .ttm)"
+            "Buscar archivos adicionales de proyecto"
         )
-        self.extra_files_check.setChecked(False)
+        self.extra_files_check.setChecked(True)
 
         self.folder_container_layout.addWidget(self.extra_files_check)
 

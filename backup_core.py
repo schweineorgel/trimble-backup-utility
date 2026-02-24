@@ -33,7 +33,7 @@ def scan_and_pull_extra_directories(
     log_callback,
     is_cancelled
 ):
-    log_callback("\nBuscando archivos adicionales (.csv, .dxf, .ttm)...")
+    log_callback("\nBuscando archivos adicionales...")
 
     result = run_adb_command(
         ["-s", device, "shell", "ls", "-R", "/sdcard"],
