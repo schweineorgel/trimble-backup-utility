@@ -22,7 +22,7 @@ TRIMBLE_MODELS = [
     # Trimble
     "TSC5", "TSC510", "TSC710",
     "TCU5", "TDC6", "TDC600",
-    "TDC100", "22041219NY"
+    "TDC100"
 ]
 
 SPECTRA_MODELS = [
@@ -42,7 +42,6 @@ MODEL_IMAGES = {
     "TDC600_1": "assets/tdc600.png",
     "TDC600_2": "assets/tdc600.png",
     "TDC100": "assets/tdc100.png",
-    "22041219NY": "assets/tdc100.png",
     # Spectra
     "MobileMapper6": "assets/mobilemapper6.png",
     "MobileMapper60": "assets/mobilemapper60.png",
