@@ -19,6 +19,7 @@ Proporciona una interfaz gráfica clara para automatizar la extracción de archi
 - Soporte para archivos geoespaciales y de proyecto (DXF, DWG, JXL, T02, etc.)
 - Copia estructurada con preservación de rutas
 - Compatible con colectoras basadas en Android de Trimble Inc. y Spectra Precision
+- Flujo de trabajo optimizado para entornos de servicio técnico
 
 ---
 
@@ -28,6 +29,36 @@ Proporciona una interfaz gráfica clara para automatizar la extracción de archi
   <img src="docs/acercade.png" alt="Application Screenshot" width="45%"/>
   <img src="docs/poc.png" alt="Application Screenshot" width="45%"/>
 </p>
+
+---
+
+### Búsqueda adicional de archivos de proyecto
+
+La opción de búsqueda adicional de archivos de proyecto permite localizar archivos de forma dinámica mediante filtrado por sufijo (extensión).
+
+El sistema escanea el almacenamiento del dispositivo y respalda automáticamente los archivos que coincidan con las siguientes extensiones:
+
+#### Extensiones de archivos respaldados
+`
+.csv   .dxf   .dwg   .ttm   .job   .jxl
+.t02   .t04   .dat   .rnx   .obs   .nav
+.shp   .dbf   .prj   .kml   .kmz   .txt
+.asc   .xml
+`
+
+#### Archivos geoespaciales y GNSS
+
+- DXF / DWG — Dibujos CAD
+- JXL / JOB / TTM — Archivos de proyecto Trimble
+- T02 / T04 — Datos GNSS propietarios
+- RNX / OBS / NAV — Datos RINEX
+- SHP / DBF / PRJ — Shapefiles (ESRI)
+- KML / KMZ — Datos geográficos compatibles con Google Earth
+
+#### Archivos de datos y configuración
+
+- CSV / DAT / TXT / ASC — Datos tabulares y exportaciones
+- XML — Configuraciones y metadatos
 
 ---
 
@@ -83,7 +114,7 @@ Ejemplo: `v1.0.0`
 ## Limitaciones conocidas
 
 - Solo para Windows
-- Requiere activación manual de la depuración USB
+- Requiere activación y desactivación manual de la depuración USB
 - El dispositivo debe autorizar el ordenador al conectarse por primera vez
 
 ---
