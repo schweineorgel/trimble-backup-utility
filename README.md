@@ -15,12 +15,10 @@ Proporciona una interfaz gráfica clara para automatizar la extracción de archi
 
 ## Características
 
-- Detección automática de dispositivos mediante ADB
-- Carpetas de respaldo estructuradas y con marca de tiempo (Estructura de carpeta: modelo_serial_OT_fecha)
-- Extracción organizada del almacenamiento interno
-- Sistema de registro integrado
-- Interfaz de usuario sencilla e intuitiva
-- Ligero y portátil
+- Detección automática y dinámica de extensiones de archivo para respaldo
+- Soporte para archivos geoespaciales y de proyecto (DXF, DWG, JXL, T02, etc.)
+- Copia estructurada con preservación de rutas
+- Compatible con colectoras basadas en Android de Trimble Inc. y Spectra Precision
 
 ---
 
