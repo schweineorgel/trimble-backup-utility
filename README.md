@@ -94,7 +94,7 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 
 ## Instalación
 
-1. Descarga la última versión desde la sección **Releases**.
+1. Descarga la última versión desde la sección [**Releases**](https://github.com/schweineorgel/trimble-backup-utility/releases).
 2. Ejecuta el archivo ejecutable.
 3. Activa la depuración USB en la colectora.
 4. Conecta tu dispositivo por USB.
