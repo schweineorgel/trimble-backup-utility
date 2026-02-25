@@ -53,7 +53,7 @@ DEVICE_PROFILES = {
     "trimble": {
         "folders": [
             ("/sdcard/Trimble Data", True),
-            ("/sdcard/Documents", True),
+            ("/sdcard/Documents", False),
             ("/sdcard/Download", False),
             ("/sdcard/Pictures/Screenshots", False),
         ]
