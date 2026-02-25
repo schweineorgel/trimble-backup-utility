@@ -24,9 +24,6 @@ from adb import (
 from config import TRIMBLE_MODELS, SPECTRA_MODELS, DEVICE_PROFILES
 from backup_worker import BackupWorker
 
-BASE_MARGIN = 12
-BASE_SPACING = 10
-
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -191,16 +188,16 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.backup_active = False
-        self.last_detected_device = None  # Track last device seen
-        self.device_compatible = None  # Track if last device was compatible
+        self.last_detected_device = None
+        self.device_compatible = None
         self.user_cancelled = False
         self.closing_after_cancel = False
 
         self.setWindowTitle("Trimble Backup Utility v1.0.0")
         self.setWindowIcon(QIcon(resource_path("assets/trimble-backup-utility.ico")))
-        # self.resize(600, 480)
-        self.setMinimumWidth(800)
-        self.setMinimumHeight(600)
+
+        self.resize(900, 600)
+        self.setMinimumSize(800, 600)
 
         self._build_ui()
 
@@ -209,8 +206,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(BASE_MARGIN, BASE_MARGIN, BASE_MARGIN, BASE_MARGIN)
-        main_layout.setSpacing(BASE_SPACING)
+        main_layout.setContentsMargins(12, 12, 12, 12)
+        main_layout.setSpacing(10)
         central_widget.setLayout(main_layout)
 
         status_layout = QHBoxLayout()
@@ -262,14 +259,14 @@ class MainWindow(QMainWindow):
         # -------------------------
         # Left Container
         # -------------------------
-        left_container = QWidget()
-        left_layout = QVBoxLayout(left_container)
+        self.left_container = QWidget()
+        left_layout = QVBoxLayout(self.left_container)
 
         # -------------------------
         # Image Container
         # -------------------------
         self.image_container = QWidget()
-        self.image_container.setMinimumHeight(260)
+        self.image_container.setMinimumHeight(300)
         self.image_container.setStyleSheet("""
             border: 0.5px solid #dcdfe3;
             border-radius: 8px;
@@ -320,33 +317,51 @@ class MainWindow(QMainWindow):
 
         self.cancel_button.setEnabled(False)
 
-        # Check boxes
-        options_group = QGroupBox("Opciones de respaldo")
-        options_layout = QVBoxLayout()
-        options_group.setLayout(options_layout)
+        # Contenedor horizontal para los grupos
+        groups_row = QHBoxLayout()
 
+        # Grupo de carpetas
+        self.options_group = QGroupBox("Carpetas")
+        options_layout = QVBoxLayout()
+        self.options_group.setLayout(options_layout)
         self.folder_container_layout = options_layout
-        right_layout.addWidget(options_group)
+
+        # Grupo de opciones avanzadas
+        self.advanced_group = QGroupBox("Opciones avanzadas")
+        advanced_layout = QVBoxLayout()
+        self.advanced_group.setLayout(advanced_layout)
+
+        # Opciones avanzadas
+        self.extra_files_check = QCheckBox("Buscar archivos adicionales de proyecto")
+        self.extra_files_check.setChecked(True)
+        advanced_layout.addWidget(self.extra_files_check)
+
+        groups_row.addWidget(self.options_group)
+        groups_row.addWidget(self.advanced_group)
+
+        right_layout.addLayout(groups_row)
 
         self.folder_checks = []
-        self.extra_files_check = None
 
         button_row = QHBoxLayout()
         button_row.addWidget(self.backup_button)
         button_row.addWidget(self.cancel_button)
-
         right_layout.addLayout(button_row)
+
+        self.options_group.setVisible(False)
+        self.advanced_group.setVisible(False)
+        self.device_info_box.setVisible(False)
 
         # -------------------------
         # Splitter
         # -------------------------
         splitter = QSplitter(Qt.Orientation.Horizontal)
-        splitter.addWidget(left_container)
+        splitter.addWidget(self.left_container)
         splitter.addWidget(right_container)
         # splitter.setSizes([200, 550])
 
-        left_container.setMinimumWidth(260)  # minimum width
-        left_container.setMaximumWidth(260)  # maximum width
+        self.left_container.setMinimumWidth(290)  # minimum width
+        self.left_container.setMaximumWidth(290)  # maximum width
 
         left_layout.setContentsMargins(0, 0, 3, 0)
         left_layout.setSpacing(10)
@@ -408,14 +423,6 @@ class MainWindow(QMainWindow):
             self.folder_container_layout.addWidget(checkbox)
             self.folder_checks.append(checkbox)
 
-        # Extra project file scan option
-        self.extra_files_check = QCheckBox(
-            "Buscar archivos adicionales de proyecto"
-        )
-        self.extra_files_check.setChecked(True)
-
-        self.folder_container_layout.addWidget(self.extra_files_check)
-
     # -------------------------
     # Image animation
     # -------------------------
@@ -466,6 +473,10 @@ class MainWindow(QMainWindow):
         for d in input_dialogs:
             d.reject()
 
+        self.device_info_box.setVisible(False)
+        self.options_group.setVisible(False)
+        self.advanced_group.setVisible(False)
+
         self.log(f"Dispositivo desconectado: {self.current_serial}")
         self.device_status_label.setText("Dispositivo: Desconectado")
         self.device_info_box.clear()
@@ -485,7 +496,6 @@ class MainWindow(QMainWindow):
                 widget.deleteLater()
 
         self.folder_checks.clear()
-        self.extra_files_check = None
         self.device_compatible = None
 
         if self.backup_active and hasattr(self, "worker") and not self.user_cancelled:
@@ -622,6 +632,10 @@ class MainWindow(QMainWindow):
         self.device_compatible = True
 
         self.build_folder_options(device_family)
+
+        self.options_group.setVisible(True)
+        self.advanced_group.setVisible(True)
+        self.device_info_box.setVisible(True)
 
     # -------------------------
     # Logging
