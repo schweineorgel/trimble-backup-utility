@@ -39,12 +39,12 @@ La opción de búsqueda adicional de archivos de proyecto permite localizar arch
 El sistema escanea el almacenamiento del dispositivo y respalda automáticamente los archivos que coincidan con las siguientes extensiones:
 
 #### Extensiones de archivos respaldados
-`
+```
 .csv   .dxf   .dwg   .ttm   .job   .jxl
 .t02   .t04   .dat   .rnx   .obs   .nav
 .shp   .dbf   .prj   .kml   .kmz   .txt
 .asc   .xml
-`
+```
 
 #### Archivos geoespaciales y GNSS
 
