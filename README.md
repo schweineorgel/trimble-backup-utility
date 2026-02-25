@@ -75,20 +75,24 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 
 ### Trimble
 
-- TSC5  
-- TSC510  
-- TSC710  
-- TCU5  
-- TDC6  
-- TDC600  
-- TDC100  
+| Dispositivo | Probado | Notas |
+|-------------|---------|-------|
+| TSC5        | No      |  |
+| TSC510      | Parcial |  |
+| TSC710      | No      |  |
+| TCU5        | No      |  |
+| TDC6        | No      |  |
+| TDC600      | Sí      | Android 8; no se puede obtener el S/N físico vía ADB en algunos firmwares, por lo que puede requerir ingreso manual del serial en la herramienta. |
+| TDC100      | No      |  |
 
 ### Spectra
 
-- MobileMapper 6  
-- MobileMapper 60  
-- MobileMapper 5  
-- Ranger 5  
+| Dispositivo     | Probado |
+|-----------------|---------|
+| MobileMapper 6  | No      |
+| MobileMapper 60 | No      |
+| MobileMapper 5  | No      |
+| Ranger 5        | No      |
 
 ---
 
