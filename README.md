@@ -121,9 +121,8 @@ Ejemplo: `v1.0.0`
 
 ## Licencia
 
-MIT No Attribution
-
-Copyright <2026> <COPYRIGHT JAVIER SALAS>
+Este proyecto está licenciado bajo la Licencia MIT.  
+Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
