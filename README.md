@@ -81,7 +81,7 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 | TSC510      | Parcial |  |
 | TSC710      | No      |  |
 | TCU5        | No      |  |
-| TDC6        | No      |  |
+| TDC6        | Parcial |  |
 | TDC600      | Sí      | Android 8; no se puede obtener el S/N físico vía ADB en algunos firmwares, por lo que puede requerir ingreso manual del serial en la herramienta. |
 | TDC100      | No      |  |
 
