@@ -1,30 +1,8 @@
 import os
 from datetime import datetime
-from config import BACKUP_ROOT
+from config import BACKUP_ROOT, EXTRA_BACKUP_EXTENSIONS, BLOCKED_DIRECTORIES
 from adb import run_adb_command, get_connected_device
 
-EXTRA_BACKUP_EXTENSIONS = [
-    ".csv",
-    ".dxf",
-    ".dwg",
-    ".ttm",
-    ".job",
-    ".jxl",
-    ".t02",
-    ".t04",
-    ".dat",
-    ".rnx",
-    ".obs",
-    ".nav",
-    ".shp",
-    ".dbf",
-    ".prj",
-    ".kml",
-    ".kmz",
-    ".txt",
-    ".asc",
-    ".xml",
-]
 
 def scan_and_pull_extra_directories(
     device,
@@ -46,6 +24,7 @@ def scan_and_pull_extra_directories(
 
     current_dir = ""
     directories_to_pull = set()
+    root_files_to_pull = set()
 
     for line in result.splitlines():
         if is_cancelled():
@@ -62,7 +41,16 @@ def scan_and_pull_extra_directories(
 
         for ext in EXTRA_BACKUP_EXTENSIONS:
             if line.lower().endswith(ext):
+                if current_dir.rstrip("/") == "/sdcard":
+                    full_file_path = f"/sdcard/{line}"
+                    root_files_to_pull.add(full_file_path)
+                    break
+
                 full_dir = current_dir
+
+                # Skip excluded folders
+                if any(full_dir.startswith(blocked) for blocked in BLOCKED_DIRECTORIES):
+                    break
 
                 # Skip if already included in selected folders
                 if any(full_dir.startswith(folder) for folder in selected_folders):
@@ -74,8 +62,8 @@ def scan_and_pull_extra_directories(
                 directories_to_pull.add(full_dir)
                 break
 
-    if not directories_to_pull:
-        log_callback("No se encontraron directorios adicionales.")
+    if not directories_to_pull and not root_files_to_pull:
+        log_callback("No se encontraron archivos adicionales.")
         return True
 
     extras_root = os.path.join(backup_path, "Directorios extra")
@@ -92,16 +80,12 @@ def scan_and_pull_extra_directories(
 
         # Remove leading /
         relative_remote_path = relative_remote_path.lstrip("/")
-
-        # Remove sdcard root
         if relative_remote_path.lower().startswith("sdcard/"):
             relative_remote_path = relative_remote_path[len("sdcard/"):]
 
         # Build local path that mirrors structure
         local_target_dir = os.path.join(extras_root, relative_remote_path)
-
-        # Ensure directory exists
-        os.makedirs(os.path.dirname(local_target_dir), exist_ok=True)
+        os.makedirs(local_target_dir, exist_ok=True)
 
         run_adb_command(
             ["-s", device, "pull", remote_dir, local_target_dir],
@@ -109,7 +93,24 @@ def scan_and_pull_extra_directories(
             is_cancelled=is_cancelled
         )
 
+    for remote_file in sorted(root_files_to_pull):
+
+        if is_cancelled():
+            return False
+
+        log_callback(f"Respaldando archivo raíz adicional: {remote_file}")
+
+        file_name = os.path.basename(remote_file)
+        local_target = os.path.join(extras_root, file_name)
+
+        run_adb_command(
+            ["-s", device, "pull", remote_file, local_target],
+            log_callback=log_callback,
+            is_cancelled=is_cancelled
+        )
+
     return True
+
 
 def create_backup_directory(model, serial, ot, technician, android_version):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

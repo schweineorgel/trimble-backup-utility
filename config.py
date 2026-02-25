@@ -8,6 +8,13 @@ def resource_path(relative_path):
     return os.path.join(os.path.abspath("."), relative_path)
 
 
+# Full dir
+BLOCKED_DIRECTORIES = [
+    "/sdcard/Android",
+    "/sdcard/DCIM/.thumbnails",
+    "/sdcard/LOST.DIR"
+]
+
 ADB_PATH = resource_path("adb/adb.exe")
 BACKUP_ROOT = "backups"
 
@@ -15,7 +22,7 @@ TRIMBLE_MODELS = [
     # Trimble
     "TSC5", "TSC510", "TSC710",
     "TCU5", "TDC6", "TDC600",
-    "TDC100",
+    "TDC100", "22041219NY"
 ]
 
 SPECTRA_MODELS = [
@@ -35,6 +42,7 @@ MODEL_IMAGES = {
     "TDC600_1": "assets/tdc600.png",
     "TDC600_2": "assets/tdc600.png",
     "TDC100": "assets/tdc100.png",
+    "22041219NY": "assets/tdc100.png",
     # Spectra
     "MobileMapper6": "assets/mobilemapper6.png",
     "MobileMapper60": "assets/mobilemapper60.png",
@@ -59,3 +67,26 @@ DEVICE_PROFILES = {
         ]
     }
 }
+
+EXTRA_BACKUP_EXTENSIONS = [
+    ".csv",
+    ".dxf",
+    ".dwg",
+    ".ttm",
+    ".job",
+    ".jxl",
+    ".t02",
+    ".t04",
+    ".dat",
+    ".rnx",
+    ".obs",
+    ".nav",
+    ".shp",
+    ".dbf",
+    ".prj",
+    ".kml",
+    ".kmz",
+    ".txt",
+    ".asc",
+    ".xml"
+]
