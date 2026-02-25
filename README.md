@@ -25,7 +25,8 @@ Proporciona una interfaz gráfica clara para automatizar la extracción de archi
 ## Vista previa de la aplicación
 
 <p align="center">
-  <img src="docs/acercade.png" alt="Application Screenshot" width="60%"/>
+  <img src="docs/acercade.png" alt="Application Screenshot" width="45%"/>
+  <img src="docs/poc.png" alt="Application Screenshot" width="45%"/>
 </p>
 
 ---
