@@ -101,7 +101,7 @@ def get_device_info(device):
         ["-s", device, "shell", "getprop", "ro.product.model"]
     )
     serial = run_adb_command(
-        ["-s", device, "shell", "getprop", "ro.serialno"]
+        ["-s", device, "shell", "getprop", "sys.qc.sn"]
     )
     android_version = run_adb_command(
         ["-s", device, "shell", "getprop", "ro.build.version.release"]

@@ -454,13 +454,12 @@ class MainWindow(QMainWindow):
     # Handlers
     # -------------------------
 
-    def on_device_connected(self, serial):
-        self.log(f"Dispositivo conectado: {serial}")
-        self.handle_detect()  # get device info
+    def on_device_connected(self):
+        self.handle_detect()
 
-    def on_device_disconnected(self, serial):
+    def on_device_disconnected(self):
 
-        self.log(f"Dispositivo desconectado: {serial}")
+        self.log(f"Dispositivo desconectado: {self.current_serial}")
         self.device_status_label.setText("Dispositivo: Desconectado")
         self.device_info_box.clear()
         self.current_device = None
@@ -531,6 +530,7 @@ class MainWindow(QMainWindow):
             return
 
         model, serial, android_version = get_device_info(device)
+        self.log(f"Dispositivo conectado: {serial}")
 
         device_family = None
 
@@ -568,7 +568,7 @@ class MainWindow(QMainWindow):
         self.current_model = model
         self.current_android_version = android_version
 
-        self.device_status_label.setText(f"Dispositivo: {device}")
+        self.device_status_label.setText(f"Dispositivo: {model} | SN: {serial}")
         self.update_backup_button_state()
 
         self.last_detected_device = device
