@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout, QPushButton, QLabel,
     QPlainTextEdit, QLineEdit, QMessageBox,
     QSplitter, QGraphicsOpacityEffect, QStackedLayout,
-    QCheckBox, QDialog, QGroupBox
+    QCheckBox, QDialog, QGroupBox, QInputDialog, QApplication
 )
 from PyQt6.QtCore import (
     Qt, QThread, pyqtSignal,
@@ -454,10 +454,17 @@ class MainWindow(QMainWindow):
     # Handlers
     # -------------------------
 
-    def on_device_connected(self):
+    def on_device_connected(self, serial):
         self.handle_detect()
 
-    def on_device_disconnected(self):
+    def on_device_disconnected(self, serial):
+
+        input_dialogs = [
+            w for w in QApplication.topLevelWidgets()
+            if isinstance(w, QInputDialog)
+        ]
+        for d in input_dialogs:
+            d.reject()
 
         self.log(f"Dispositivo desconectado: {self.current_serial}")
         self.device_status_label.setText("Dispositivo: Desconectado")
@@ -517,6 +524,18 @@ class MainWindow(QMainWindow):
 
         return False
 
+    def ask_manual_serial(self):
+        text, ok = QInputDialog.getText(
+            self,
+            "Serial manual",
+            "Ingresa el serial del dispositivo:"
+        )
+
+        if ok and text.strip():
+            return text.strip()
+
+        return None
+
     def handle_detect(self):
 
         device = get_connected_device()
@@ -529,7 +548,31 @@ class MainWindow(QMainWindow):
         if device == self.last_detected_device and self.device_compatible:
             return
 
-        model, serial, android_version = get_device_info(device)
+        info = get_device_info(device)
+
+        model = info["model"]
+        serial = info["serial"]
+        android_version = info["android_version"]
+        manufacturer = info["manufacturer"]
+        firmware = info["firmware"]
+        build_type = info["build_type"]
+
+        if info.get("suspicious_serial"):
+
+            text, ok = QInputDialog.getText(
+                self,
+                "Serial sospechoso",
+                f"El serial detectado parece inusual: {serial}\n"
+                "Ingresa el serial manual (o deja vacío/cancela para usar el detectado)."
+            )
+
+            if ok and text.strip():
+                serial = text.strip().upper()
+
+        if get_connected_device() != device:
+            self.log("Dispositivo desconectado durante detección.")
+            return
+
         self.log(f"Dispositivo conectado: {serial}")
 
         device_family = None
@@ -561,12 +604,16 @@ class MainWindow(QMainWindow):
             return
 
         # self.log(f"Dispositivo detectado: {device}")
-        self.show_device_info(model, serial, android_version)
+        self.show_device_info(model, serial, android_version, manufacturer, firmware, build_type)
 
         self.current_device = device
         self.current_serial = serial
         self.current_model = model
         self.current_android_version = android_version
+        self.current_manufacturer = manufacturer
+        self.current_firmware = firmware
+        self.current_build_type = build_type
+
 
         self.device_status_label.setText(f"Dispositivo: {model} | SN: {serial}")
         self.update_backup_button_state()
@@ -586,11 +633,15 @@ class MainWindow(QMainWindow):
             self.log_box.verticalScrollBar().maximum()
         )
 
-    def show_device_info(self, model, serial, android_version):
+    def show_device_info(self, model, serial, android_version, manufacturer, firmware, build_type):
         self.device_info_box.clear()
-        self.device_info_box.appendPlainText(f"Modelo: {model}")
-        self.device_info_box.appendPlainText(f"Serial: {serial}")
-        self.device_info_box.appendPlainText(f"Android: {android_version}")
+
+        self.device_info_box.appendPlainText(f"{'Modelo:':12} {model}")
+        self.device_info_box.appendPlainText(f"{'Fabricante:':12} {manufacturer}")
+        self.device_info_box.appendPlainText(f"{'Serial:':12} {serial}")
+        self.device_info_box.appendPlainText(f"{'Android:':12} {android_version}")
+        self.device_info_box.appendPlainText(f"{'Firmware:':12} {firmware}")
+        self.device_info_box.appendPlainText(f"{'Build:':12} {build_type}")
 
         # Load image
         from config import MODEL_IMAGES

@@ -95,16 +95,38 @@ def get_connected_device():
 
     return devices[0]
 
+def is_suspicious_serial(s: str) -> bool:
+
+    if not s:
+        return True
+
+    if not s.isalnum():
+        return True
+
+    return len(s) <= 8
 
 def get_device_info(device):
-    model = run_adb_command(
-        ["-s", device, "shell", "getprop", "ro.product.model"]
-    )
-    serial = run_adb_command(
-        ["-s", device, "shell", "getprop", "sys.qc.sn"]
-    )
-    android_version = run_adb_command(
-        ["-s", device, "shell", "getprop", "ro.build.version.release"]
-    )
+    def prop(name):
+        return run_adb_command(
+            ["-s", device, "shell", "getprop", name]
+        ).strip()
 
-    return model, serial, android_version
+    model = prop("ro.product.model")
+    manufacturer = prop("ro.product.manufacturer")
+    android_version = prop("ro.build.version.release")
+    firmware = prop("ro.build.display.id")
+    build_type = prop("ro.build.type")
+
+    serial = prop("sys.qc.sn")
+    if not serial:
+        serial = prop("ro.serialno")
+
+    return {
+        "model": model,
+        "manufacturer": manufacturer,
+        "serial": serial,
+        "android_version": android_version,
+        "firmware": firmware,
+        "build_type": build_type,
+        "suspicious_serial": is_suspicious_serial(serial),
+    }
