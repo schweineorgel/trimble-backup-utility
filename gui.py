@@ -187,11 +187,21 @@ class AdbWatcher(QThread):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.worker = None
+        self.thread = None
+        self.current_manufacturer = None
+        self.current_build_type = None
+        self.current_firmware = None
+        self.current_android_version = None
+        self.current_serial = None
+        self.current_model = None
+        self.current_device = None
         self.backup_active = False
         self.last_detected_device = None
         self.device_compatible = None
         self.user_cancelled = False
         self.closing_after_cancel = False
+        self.original_serial = None
 
         self.setWindowTitle("Trimble Backup Utility v1.0.0")
         self.setWindowIcon(QIcon(resource_path("assets/trimble-backup-utility.ico")))
@@ -216,8 +226,17 @@ class MainWindow(QMainWindow):
 
         self.device_status_label = QLabel("Dispositivo: Desconectado")
 
+        self.edit_sn_button = QPushButton("Editar SN")
+        self.edit_sn_button.setEnabled(False)
+        self.restore_sn_button = QPushButton("↻")
+        self.restore_sn_button.setEnabled(False)
+
         status_layout.addWidget(self.device_status_label)
+        status_layout.addWidget(self.edit_sn_button)
+        status_layout.addWidget(self.restore_sn_button)
+
         status_layout.addStretch()
+
         self.about_button = QPushButton("Acerca de")
         status_layout.addWidget(self.about_button)
 
@@ -385,11 +404,72 @@ class MainWindow(QMainWindow):
         self.backup_button.clicked.connect(self.start_backup)
         self.cancel_button.clicked.connect(self.cancel_backup)
         self.about_button.clicked.connect(self.show_about)
+        self.edit_sn_button.clicked.connect(self.edit_serial)
+        self.restore_sn_button.clicked.connect(self.restore_serial)
 
         self.adb_watcher = AdbWatcher()
         self.adb_watcher.device_connected.connect(self.on_device_connected)
         self.adb_watcher.device_disconnected.connect(self.on_device_disconnected)
         self.adb_watcher.start()
+
+    def restore_serial(self):
+        if not self.original_serial:
+            return
+
+        self.current_serial = self.original_serial
+
+        self.device_status_label.setText(
+            f"Dispositivo: {self.current_model} | SN: {self.current_serial}"
+        )
+
+        self.show_device_info(
+            self.current_model,
+            self.current_serial,
+            self.current_android_version,
+            self.current_manufacturer,
+            self.current_firmware,
+            self.current_build_type
+        )
+
+        self.log(f"Serial restaurado al original: {self.current_serial}")
+
+        self.restore_sn_button.setEnabled(False)
+
+    def edit_serial(self):
+        if not self.current_serial:
+            return
+
+        text, ok = QInputDialog.getText(
+            self,
+            "Editar Serial",
+            "Nuevo número de serie:",
+            text=self.current_serial
+        )
+
+        if ok and text.strip():
+            new_serial = text.strip().upper()
+
+            self.current_serial = new_serial
+
+            if self.original_serial and new_serial != self.original_serial:
+                self.restore_sn_button.setEnabled(True)
+
+            # Update status label
+            self.device_status_label.setText(
+                f"Dispositivo: {self.current_model} | SN: {self.current_serial}"
+            )
+
+            # Update device info box
+            self.show_device_info(
+                self.current_model,
+                self.current_serial,
+                self.current_android_version,
+                self.current_manufacturer,
+                self.current_firmware,
+                self.current_build_type
+            )
+
+            self.log(f"Serial modificado manualmente: {self.current_serial}")
 
     def try_start_backup(self):
         if self.backup_button.isEnabled():
@@ -461,10 +541,10 @@ class MainWindow(QMainWindow):
     # Handlers
     # -------------------------
 
-    def on_device_connected(self, serial):
+    def on_device_connected(self):
         self.handle_detect()
 
-    def on_device_disconnected(self, serial):
+    def on_device_disconnected(self):
 
         input_dialogs = [
             w for w in QApplication.topLevelWidgets()
@@ -473,6 +553,7 @@ class MainWindow(QMainWindow):
         for d in input_dialogs:
             d.reject()
 
+        self.edit_sn_button.setEnabled(False)
         self.device_info_box.setVisible(False)
         self.options_group.setVisible(False)
         self.advanced_group.setVisible(False)
@@ -484,6 +565,7 @@ class MainWindow(QMainWindow):
         self.current_model = None
         self.current_serial = None
         self.last_detected_device = None
+        self.original_serial = None
         self.update_backup_button_state()
 
         self.device_image_label.clear()
@@ -562,6 +644,7 @@ class MainWindow(QMainWindow):
 
         model = info["model"]
         serial = info["serial"]
+        self.original_serial = serial
         android_version = info["android_version"]
         manufacturer = info["manufacturer"]
         firmware = info["firmware"]
@@ -599,6 +682,7 @@ class MainWindow(QMainWindow):
             self.current_serial = None
             self.current_model = None
             self.backup_button.setEnabled(False)
+            self.edit_sn_button.setEnabled(False)
             self.update_backup_button_state()
 
             self.device_status_label.setText("Dispositivo: No compatible")
@@ -630,8 +714,10 @@ class MainWindow(QMainWindow):
 
         self.last_detected_device = device
         self.device_compatible = True
+        self.edit_sn_button.setEnabled(True)
+        self.restore_sn_button.setEnabled(False)
 
-        self.build_folder_options(device_family)
+        self.build_folder_options(device_family )
 
         self.options_group.setVisible(True)
         self.advanced_group.setVisible(True)
