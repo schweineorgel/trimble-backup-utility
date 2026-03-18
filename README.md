@@ -1,6 +1,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Status](https://img.shields.io/badge/status-stable-green)
 
+---
+
+[![Descargar última versión](https://img.shields.io/badge/Descargar-Última%20versión-blue?style=for-the-badge&logo=github)](https://github.com/youruser/yourrepo/releases/latest)
+
+---
+
 # Trimble Backup Utility
 
 `Nota: Desarrollado para soporte técnico interno en entornos de gestión de equipos geoespaciales.`
