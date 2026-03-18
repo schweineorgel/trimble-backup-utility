@@ -3,6 +3,7 @@
 
 ---
 
+# Descargar
 [![Descargar última versión](https://img.shields.io/badge/Descargar-Última%20versión-blue?style=for-the-badge&logo=github)](https://github.com/schweineorgel/trimble-backup-utility/releases/latest)
 
 ---
@@ -52,20 +53,6 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 .asc   .xml
 ```
 
-#### Archivos geoespaciales y GNSS
-
-- DXF / DWG — Dibujos CAD
-- JXL / JOB / TTM — Archivos de proyecto Trimble
-- T02 / T04 — Datos GNSS propietarios
-- RNX / OBS / NAV — Datos RINEX
-- SHP / DBF / PRJ — Shapefiles (ESRI)
-- KML / KMZ — Datos geográficos compatibles con Google Earth
-
-#### Archivos de datos y configuración
-
-- CSV / DAT / TXT / ASC — Datos tabulares y exportaciones
-- XML — Configuraciones y metadatos
-
 ---
 
 ## Requisitos
@@ -83,12 +70,12 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 
 | Dispositivo | Probado | Notas |
 |-------------|---------|-------|
-| TSC5        | No      |  |
-| TSC510      | Parcial |  |
+| TSC5        | Sí      |  |
+| TSC510      | Sí |  |
 | TSC710      | No      |  |
 | TCU5        | No      |  |
-| TDC6        | Parcial |  |
-| TDC600      | Sí      | Android 8; no se puede obtener el S/N físico vía ADB en algunos firmwares, por lo que puede requerir ingreso manual del serial en la herramienta. |
+| TDC6        | Sí |  |
+| TDC600      | Sí      | Android 8: no se puede obtener el S/N físico vía ADB en algunos firmwares, por lo que puede requerir ingreso manual del serial en la herramienta. |
 | TDC100      | No      |  |
 
 ### Spectra
@@ -138,4 +125,4 @@ Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ## Autor
 
-Javier Salas
+Javier Salas Bocaz
