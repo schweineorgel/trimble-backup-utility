@@ -7,6 +7,9 @@ def resource_path(relative_path):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
 
+APP_VER = '1.1.0'
+VERSION_URL = "https://github.com/schweineorgel/trimble-backup-utility/main/meta/version.json"
+
 
 # Full dir
 BLOCKED_DIRECTORIES = [

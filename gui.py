@@ -2,6 +2,8 @@ import subprocess
 import time
 import sys
 import os
+import requests
+import webbrowser
 
 from PyQt6.QtGui import (
     QFont, QPixmap, QIcon
@@ -21,9 +23,25 @@ from adb import (
     get_connected_device,
     get_device_info
 )
-from config import TRIMBLE_MODELS, SPECTRA_MODELS, DEVICE_PROFILES
+from config import TRIMBLE_MODELS, SPECTRA_MODELS, DEVICE_PROFILES, MODEL_IMAGES, APP_VER, VERSION_URL
 from backup_worker import BackupWorker
+from packaging import version
 
+
+def check_for_updates():
+    try:
+        response = requests.get(VERSION_URL, timeout=3)
+        data = response.json()
+
+        latest_version = data["version"]
+
+        if version.parse(latest_version) > version.parse(APP_VER):
+            return data
+
+    except Exception as e:
+        print("Update check failed:", e)
+
+    return None
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -65,7 +83,7 @@ class AboutDialog(QDialog):
             <div style='text-align: center;'>
                 <img src='{app_icon}' width='100'><br>
                 <b>Trimble Backup Utility</b><br>
-                <span style='color: #555;'>Versión 1.0.0</span>
+                <span style='color: #555;'>Versión {APP_VER}</span>
             </div>
             """
         )
@@ -377,10 +395,9 @@ class MainWindow(QMainWindow):
         splitter = QSplitter(Qt.Orientation.Horizontal)
         splitter.addWidget(self.left_container)
         splitter.addWidget(right_container)
-        # splitter.setSizes([200, 550])
+        splitter.setSizes([290, 610])
 
-        self.left_container.setMinimumWidth(290)  # minimum width
-        self.left_container.setMaximumWidth(290)  # maximum width
+        splitter.setCollapsible(0, False)
 
         left_layout.setContentsMargins(0, 0, 3, 0)
         left_layout.setSpacing(10)
@@ -411,6 +428,23 @@ class MainWindow(QMainWindow):
         self.adb_watcher.device_connected.connect(self.on_device_connected)
         self.adb_watcher.device_disconnected.connect(self.on_device_disconnected)
         self.adb_watcher.start()
+        self.update_check()
+
+    def update_check(self):
+        update = check_for_updates()
+
+        if not update:
+            return
+
+        reply = QMessageBox.question(
+            self,
+            "Actualización disponible",
+            f"Hay una nueva versión ({update['version']}).\n¿Deseas descargarla?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            webbrowser.open(update["url"])
 
     def restore_serial(self):
         if not self.original_serial:
@@ -742,9 +776,6 @@ class MainWindow(QMainWindow):
         self.device_info_box.appendPlainText(f"{'Android:':12} {android_version}")
         self.device_info_box.appendPlainText(f"{'Firmware:':12} {firmware}")
         self.device_info_box.appendPlainText(f"{'Build:':12} {build_type}")
-
-        # Load image
-        from config import MODEL_IMAGES
 
         image_path = MODEL_IMAGES.get(model)
 
