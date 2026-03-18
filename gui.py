@@ -221,7 +221,7 @@ class MainWindow(QMainWindow):
         self.closing_after_cancel = False
         self.original_serial = None
 
-        self.setWindowTitle("Trimble Backup Utility v1.0.0")
+        self.setWindowTitle(f"Trimble Backup Utility {APP_VER}")
         self.setWindowIcon(QIcon(resource_path("assets/trimble-backup-utility.ico")))
 
         self.resize(900, 600)
