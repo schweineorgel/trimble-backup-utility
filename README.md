@@ -3,7 +3,7 @@
 
 ---
 
-[![Descargar última versión](https://img.shields.io/badge/Descargar-Última%20versión-blue?style=for-the-badge&logo=github)](https://github.com/youruser/yourrepo/releases/latest)
+[![Descargar última versión](https://img.shields.io/badge/Descargar-Última%20versión-blue?style=for-the-badge&logo=github)](https://github.com/schweineorgel/trimble-backup-utility/releases/latest)
 
 ---
 
