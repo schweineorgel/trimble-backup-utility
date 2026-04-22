@@ -18,6 +18,7 @@
 # Trimble Backup Utility
 
 `Nota: Desarrollado para soporte técnico interno en entornos de gestión de equipos geoespaciales.`
+
 Trimble Backup Utility es una aplicación ligera para Windows que automatiza y estandariza el respaldo de colectoras Trimble y Spectra basadas en Android mediante ADB (Android Debug Bridge).
 
 Está diseñada para entornos de servicio técnico, reparación y gestión de equipos geoespaciales, donde la extracción manual de datos suele ser lenta, propensa a errores y difícil de organizar.
