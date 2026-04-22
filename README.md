@@ -1,5 +1,20 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Windows](https://badgen.net/badge/icon/windows?icon=windows&label)](https://microsoft.com/windows/)
 ![Status](https://img.shields.io/badge/status-stable-green)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+---
+
+# Descargar
+[![Descargar última versión](https://img.shields.io/badge/Descargar-Última%20versión-blue?style=for-the-badge&logo=github)](https://github.com/schweineorgel/trimble-backup-utility/releases/latest)
+
+## Requisitos
+
+- Windows 10/11
+- Depuración USB habilitada en el dispositivo
+- Colectora Trimble o Spectra basada en Android
+- Conexión USB
+
+---
 
 # Trimble Backup Utility
 
@@ -10,8 +25,6 @@ Trimble Backup Utility es una aplicación ligera de escritorio para Windows dise
 La herramienta está diseñada para entornos de servicio técnico, laboratorios de reparación e instalaciones de gestión de equipos donde se requieren flujos de trabajo fiables de extracción de datos y mantenimiento de dispositivos.
 
 Proporciona una interfaz gráfica clara para automatizar la extracción de archivos y organizar las copias de seguridad de forma estructurada y controlada.
-
----
 
 ## Características
 
@@ -26,17 +39,12 @@ Proporciona una interfaz gráfica clara para automatizar la extracción de archi
 ## Vista previa de la aplicación
 
 <p align="center">
-  <img src="docs/acercade.png" alt="Application Screenshot" width="60%"/>
   <img src="docs/poc.png" alt="Application Screenshot" width="60%"/>
 </p>
 
----
-
 ### Búsqueda adicional de archivos de proyecto
 
-La opción de búsqueda adicional de archivos de proyecto permite localizar archivos de forma dinámica mediante filtrado por sufijo (extensión).
-
-El sistema escanea el almacenamiento del dispositivo y respalda automáticamente los archivos que coincidan con las siguientes extensiones:
+La opción de búsqueda adicional de archivos de proyecto permite localizar archivos de forma dinámica mediante filtrado por sufijo (extensión). El sistema escanea el almacenamiento del dispositivo y respalda automáticamente los archivos que coincidan con las siguientes extensiones:
 
 #### Extensiones de archivos respaldados
 ```
@@ -46,29 +54,6 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 .asc   .xml
 ```
 
-#### Archivos geoespaciales y GNSS
-
-- DXF / DWG — Dibujos CAD
-- JXL / JOB / TTM — Archivos de proyecto Trimble
-- T02 / T04 — Datos GNSS propietarios
-- RNX / OBS / NAV — Datos RINEX
-- SHP / DBF / PRJ — Shapefiles (ESRI)
-- KML / KMZ — Datos geográficos compatibles con Google Earth
-
-#### Archivos de datos y configuración
-
-- CSV / DAT / TXT / ASC — Datos tabulares y exportaciones
-- XML — Configuraciones y metadatos
-
----
-
-## Requisitos
-
-- Windows 10/11
-- Depuración USB habilitada en el dispositivo
-- Colectora Trimble o Spectra basada en Android
-- Conexión USB
-
 ---
 
 ## Dispositivos compatibles
@@ -77,12 +62,12 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 
 | Dispositivo | Probado | Notas |
 |-------------|---------|-------|
-| TSC5        | No      |  |
-| TSC510      | Parcial |  |
+| TSC5        | Sí      |  |
+| TSC510      | Sí |  |
 | TSC710      | No      |  |
 | TCU5        | No      |  |
-| TDC6        | Parcial |  |
-| TDC600      | Sí      | Android 8; no se puede obtener el S/N físico vía ADB en algunos firmwares, por lo que puede requerir ingreso manual del serial en la herramienta. |
+| TDC6        | Sí |  |
+| TDC600      | Sí      | Android 8: no se puede obtener el S/N físico vía ADB en algunos firmwares, por lo que puede requerir ingreso manual del serial en la herramienta. |
 | TDC100      | No      |  |
 
 ### Spectra
@@ -96,30 +81,12 @@ El sistema escanea el almacenamiento del dispositivo y respalda automáticamente
 
 ---
 
-## Instalación
-
-1. Descarga la última versión desde la sección [**Releases**](https://github.com/schweineorgel/trimble-backup-utility/releases).
-2. Ejecuta el archivo ejecutable.
-3. Activa la depuración USB en la colectora.
-4. Conecta tu dispositivo por USB.
-5. Inicia la copia de seguridad, ingresando datos de OT y técnico.
-
----
-
 ## Versionado
 
 Este proyecto sigue el control de versiones semántico:
 
 MAJOR.MINOR.PATCH  
 Ejemplo: `v1.0.0`
-
----
-
-## Limitaciones conocidas
-
-- Solo para Windows
-- Requiere activación y desactivación manual de la depuración USB
-- El dispositivo debe autorizar el ordenador al conectarse por primera vez
 
 ---
 
@@ -132,4 +99,4 @@ Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ## Autor
 
-Javier Salas
+Javier Salas Bocaz
