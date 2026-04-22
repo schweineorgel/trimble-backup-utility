@@ -74,6 +74,7 @@ EXTRA_BACKUP_EXTENSIONS = [
     ".dwg",
     ".ttm",
     ".job",
+    ".t01",
     ".t02",
     ".t04",
     ".dat",
@@ -87,5 +88,16 @@ EXTRA_BACKUP_EXTENSIONS = [
     ".kmz",
     ".txt",
     ".asc",
-    ".xml"
+    ".xml",
+    ".log",
+    ".rw5",
+    ".shx",
+    ".jps",
+    ".g3",
+    ".raw",
+    ".dc",
+    ".bin",
+    ".rtcm",
+    ".crd"
+
 ]
