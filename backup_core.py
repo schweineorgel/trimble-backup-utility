@@ -59,6 +59,14 @@ def scan_and_pull_extra_directories(
                 if not full_dir.startswith("/"):
                     break
 
+                if any(full_dir.startswith(existing + "/") or full_dir == existing for existing in directories_to_pull):
+                    break
+
+                directories_to_pull = {
+                    d for d in directories_to_pull
+                    if not d.startswith(full_dir + "/")
+                }
+
                 directories_to_pull.add(full_dir)
                 break
 
@@ -84,11 +92,11 @@ def scan_and_pull_extra_directories(
             relative_remote_path = relative_remote_path[len("sdcard/"):]
 
         # Build local path that mirrors structure
-        local_target_dir = os.path.join(extras_root, relative_remote_path)
-        os.makedirs(local_target_dir, exist_ok=True)
+        parent_dir = os.path.join(extras_root, os.path.dirname(relative_remote_path))
+        os.makedirs(parent_dir, exist_ok=True)
 
         run_adb_command(
-            ["-s", device, "pull", remote_dir, local_target_dir],
+            ["-s", device, "pull", remote_dir, parent_dir],
             log_callback=log_callback,
             is_cancelled=is_cancelled
         )

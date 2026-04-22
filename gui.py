@@ -777,6 +777,7 @@ class MainWindow(QMainWindow):
         self.device_info_box.appendPlainText(f"{'Firmware:':12} {firmware}")
         self.device_info_box.appendPlainText(f"{'Build:':12} {build_type}")
 
+        model = model.split("_")[0]
         image_path = MODEL_IMAGES.get(model)
 
         if image_path:

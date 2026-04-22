@@ -7,7 +7,7 @@ def resource_path(relative_path):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
 
-APP_VER = '1.1.0'
+APP_VER = '1.1.1'
 VERSION_URL = "https://raw.githubusercontent.com/schweineorgel/trimble-backup-utility/refs/heads/main/meta/version.json"
 
 
@@ -42,8 +42,6 @@ MODEL_IMAGES = {
     "TCU5": "assets/tcu5.png",
     "TDC6": "assets/tdc6.png",
     "TDC600": "assets/tdc600.png",
-    "TDC600_1": "assets/tdc600.png",
-    "TDC600_2": "assets/tdc600.png",
     "TDC100": "assets/tdc100.png",
     # Spectra
     "MobileMapper6": "assets/mobilemapper6.png",
@@ -76,7 +74,6 @@ EXTRA_BACKUP_EXTENSIONS = [
     ".dwg",
     ".ttm",
     ".job",
-    ".jxl",
     ".t02",
     ".t04",
     ".dat",
