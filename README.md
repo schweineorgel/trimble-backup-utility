@@ -1,5 +1,3 @@
-Siento que lo siguiente es suficiente:
-
 [![Windows](https://badgen.net/badge/icon/windows?icon=windows&label)](https://microsoft.com/windows/)
 ![Status](https://img.shields.io/badge/status-stable-green)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
