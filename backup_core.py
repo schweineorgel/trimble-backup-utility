@@ -68,7 +68,7 @@ def scan_and_pull_extra_directories(
     extras_root = os.path.join(backup_path, "Directorios extra")
     os.makedirs(extras_root, exist_ok=True)
 
-    for remote_dir in sorted(directories_to_pull, key=lambda x: x.count("/")):
+    for remote_dir in sorted(directories_to_pull, key=lambda x: x.count("/")): 
 
         if is_cancelled():
             return False
