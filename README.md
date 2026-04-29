@@ -10,8 +10,7 @@
 ## Requisitos
 
 - Windows 10/11
-- Depuración USB habilitada en el dispositivo
-- Colectora Trimble o Spectra basada en Android
+- [Depuración USB](https://www.xatakandroid.com/tutoriales/como-activar-opciones-desarrollador-android-sirve) habilitada en la colectora Trimble/Spectra Android
 - Conexión USB
 
 ---
@@ -20,19 +19,19 @@
 
 `Nota: Desarrollado para soporte técnico interno en entornos de gestión de equipos geoespaciales.`
 
-Trimble Backup Utility es una aplicación ligera de escritorio para Windows diseñada para simplificar las operaciones de copia de seguridad de las colectoras de datos Trimble y Spectra basadas ​​en Android, utilizando ADB (Android Debug Bridge).
+Trimble Backup Utility es una aplicación ligera para Windows que automatiza y estandariza el respaldo de colectoras Trimble y Spectra basadas en Android mediante ADB (Android Debug Bridge).
 
-La herramienta está diseñada para entornos de servicio técnico, laboratorios de reparación e instalaciones de gestión de equipos donde se requieren flujos de trabajo fiables de extracción de datos y mantenimiento de dispositivos.
+Está diseñada para entornos de servicio técnico, reparación y gestión de equipos geoespaciales, donde la extracción manual de datos suele ser lenta, propensa a errores y difícil de organizar.
 
-Proporciona una interfaz gráfica clara para automatizar la extracción de archivos y organizar las copias de seguridad de forma estructurada y controlada.
+La herramienta permite reducir significativamente el tiempo de respaldo, asegurar la integridad de los datos y mantener una estructura ordenada basada en órdenes de trabajo y técnicos responsables.
 
 ## Características
 
-- Detección automática y dinámica de extensiones de archivo para respaldo
-- Soporte para archivos geoespaciales y de proyecto (DXF, DWG, JXL, T02, etc.)
+- Busqueda de archivos geoespaciales y de proyecto asociados (DXF, DWG, JXL, T02, etc.)
 - Copia estructurada con preservación de rutas
 - Compatible con colectoras basadas en Android de Trimble Inc. y Spectra Precision
-- Flujo de trabajo optimizado para entornos de servicio técnico
+- Ingreso de orden de trabajo (OT, ej: "70648") y número de técnico ("T-X", ej: "T-37")
+- Generación de .txt post-respaldo para trazabilidad (Fecha, S/N, técnico responsable, etc.)
 
 ---
 
@@ -48,11 +47,13 @@ La opción de búsqueda adicional de archivos de proyecto permite localizar arch
 
 #### Extensiones de archivos respaldados
 ```
-.csv   .dxf   .dwg   .ttm   .job   .jxl
+.csv   .dxf   .dwg   .ttm   .job   .t01
 .t02   .t04   .dat   .rnx   .obs   .nav
 .shp   .dbf   .prj   .kml   .kmz   .txt
-.asc   .xml
+.asc   .xml   .log   .rw5   .shx   .jps
+.g3    .raw   .dc    .bin   .rtcm  .crd
 ```
+*Nota: Esta lista se actualiza continuamente según nuevos casos encontrados.
 
 ---
 
@@ -67,7 +68,7 @@ La opción de búsqueda adicional de archivos de proyecto permite localizar arch
 | TSC710      | No      |  |
 | TCU5        | No      |  |
 | TDC6        | Sí |  |
-| TDC600      | Sí      | Android 8: no se puede obtener el S/N físico vía ADB en algunos firmwares, por lo que puede requerir ingreso manual del serial en la herramienta. |
+| TDC600      | Sí      | Android 8 puede requerir ingreso manual de S/N
 | TDC100      | No      |  |
 
 ### Spectra
@@ -75,7 +76,7 @@ La opción de búsqueda adicional de archivos de proyecto permite localizar arch
 | Dispositivo     | Probado |
 |-----------------|---------|
 | MobileMapper 6  | No      |
-| MobileMapper 60 | No      |
+| MobileMapper 60 | Parcial      |
 | MobileMapper 5  | No      |
 | Ranger 5        | No      |
 
