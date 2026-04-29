@@ -75,8 +75,8 @@ La opción de búsqueda adicional de archivos de proyecto permite localizar arch
 
 | Dispositivo     | Probado |
 |-----------------|---------|
-| MobileMapper 6  | No      |
-| MobileMapper 60 | Parcial      |
+| MobileMapper 6  | Sí      |
+| MobileMapper 60 | Parcial |
 | MobileMapper 5  | No      |
 | Ranger 5        | No      |
 
