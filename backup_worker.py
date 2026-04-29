@@ -7,7 +7,7 @@ class BackupWorker(QObject):
     finished = pyqtSignal(bool)
     log_signal = pyqtSignal(str)
 
-    def __init__(self, device, model, serial, ot, technician, android_version, selected_folders, deep_scan):
+    def __init__(self, device, model, serial, ot, technician, android_version, selected_folders, deep_scan, device_family):
         super().__init__()
         self._is_cancelled = False
         self.device = device
@@ -18,6 +18,7 @@ class BackupWorker(QObject):
         self.android_version = android_version
         self.selected_folders = selected_folders
         self.deep_scan = deep_scan
+        self.device_family = device_family
 
     def cancel(self):
         if not self._is_cancelled:
@@ -40,7 +41,8 @@ class BackupWorker(QObject):
                 lambda: self._is_cancelled,
                 self.android_version,
                 self.selected_folders,
-                self.deep_scan
+                self.deep_scan,
+                self.device_family
             )
             self.finished.emit(success)
         except Exception as e:

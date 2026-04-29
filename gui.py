@@ -708,6 +708,7 @@ class MainWindow(QMainWindow):
             device_family = "trimble"
         elif any(model.startswith(prefix) for prefix in SPECTRA_MODELS):
             device_family = "spectra"
+            self.device_family = device_family
 
         if not device_family:
             self.log(f"Dispositivo no compatible.")
@@ -828,7 +829,8 @@ class MainWindow(QMainWindow):
             technician,
             android_version,
             selected_folders,
-            deep_scan
+            deep_scan,
+            self.device_family
         )
 
         self.worker.moveToThread(self.thread)

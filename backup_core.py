@@ -9,7 +9,8 @@ def scan_and_pull_extra_directories(
     backup_path,
     selected_folders,
     log_callback,
-    is_cancelled
+    is_cancelled,
+    device_family
 ):
     log_callback("\nBuscando archivos adicionales...")
 
@@ -30,10 +31,6 @@ def scan_and_pull_extra_directories(
         if is_cancelled():
             return False
 
-        line = line.strip()
-        if not line:
-            continue
-
         # Detect directory headers from ls -R
         if line.endswith(":"):
             current_dir = line[:-1]
@@ -44,7 +41,6 @@ def scan_and_pull_extra_directories(
                 if current_dir.rstrip("/") == "/sdcard":
                     full_file_path = f"/sdcard/{line}"
                     root_files_to_pull.add(full_file_path)
-                    break
 
                 full_dir = current_dir
 
@@ -62,11 +58,6 @@ def scan_and_pull_extra_directories(
                 if any(full_dir.startswith(existing + "/") or full_dir == existing for existing in directories_to_pull):
                     break
 
-                directories_to_pull = {
-                    d for d in directories_to_pull
-                    if not d.startswith(full_dir + "/")
-                }
-
                 directories_to_pull.add(full_dir)
                 break
 
@@ -77,26 +68,15 @@ def scan_and_pull_extra_directories(
     extras_root = os.path.join(backup_path, "Directorios extra")
     os.makedirs(extras_root, exist_ok=True)
 
-    for remote_dir in sorted(directories_to_pull):
+    for remote_dir in sorted(directories_to_pull, key=lambda x: x.count("/")):
 
         if is_cancelled():
             return False
 
-        log_callback(f"Respaldando directorio adicional: {remote_dir}")
-
-        relative_remote_path = remote_dir
-
-        # Remove leading /
-        relative_remote_path = relative_remote_path.lstrip("/")
-        if relative_remote_path.lower().startswith("sdcard/"):
-            relative_remote_path = relative_remote_path[len("sdcard/"):]
-
-        # Build local path that mirrors structure
-        parent_dir = os.path.join(extras_root, os.path.dirname(relative_remote_path))
-        os.makedirs(parent_dir, exist_ok=True)
+        log_callback(f"Respaldando: {remote_dir}")
 
         run_adb_command(
-            ["-s", device, "pull", remote_dir, parent_dir],
+            ["-s", device, "pull", remote_dir, extras_root],
             log_callback=log_callback,
             is_cancelled=is_cancelled
         )
@@ -142,7 +122,7 @@ def create_backup_directory(model, serial, ot, technician, android_version):
     return backup_path
 
 
-def pull_folder(device, remote_path, local_path, log, is_cancelled):
+def pull_folder(device, remote_path, local_path, log, is_cancelled, device_family):
     log(f"Respaldando {remote_path}...")
 
     # Use find to detect files (not directories)
@@ -159,6 +139,23 @@ def pull_folder(device, remote_path, local_path, log, is_cancelled):
 
     if not files:
         log(f"Saltando {remote_path} (carpeta vacía o inexistente)")
+        return True
+
+    base_name = os.path.basename(remote_path.rstrip("/"))
+
+    if device_family == "spectra":
+        for file in files:
+            rel = file[len(remote_path):].lstrip("/")
+
+            local_file = os.path.join(local_path, base_name, rel)
+
+            os.makedirs(os.path.dirname(local_file), exist_ok=True)
+
+            run_adb_command(
+                ["-s", device, "pull", file, local_file],
+                log_callback=log,
+                is_cancelled=is_cancelled
+            )
         return True
 
     # Pull folder (ADB handles recursion)
@@ -190,7 +187,8 @@ def run_backup(
     is_cancelled,
     android_version,
     selected_folders,
-    deep_scan
+    deep_scan,
+    device_family
 ):
     try:
         log_callback("\nComenzando Respaldo.")
@@ -216,13 +214,14 @@ def run_backup(
                 folder,
                 backup_path,
                 log_callback,
-                is_cancelled
+                is_cancelled,
+                device_family
             )
 
             if not success:
                 return False
 
-            # log_callback(f"\nRespaldando: {folder}")
+            #log_callback(f"\nRespaldando: {folder}")
         # Deep scan
         if deep_scan and not is_cancelled():
             success = scan_and_pull_extra_directories(
@@ -230,7 +229,8 @@ def run_backup(
                 backup_path,
                 selected_folders,
                 log_callback,
-                is_cancelled
+                is_cancelled,
+                device_family
             )
 
             if not success:

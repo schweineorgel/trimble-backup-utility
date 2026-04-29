@@ -61,8 +61,9 @@ DEVICE_PROFILES = {
     },
     "spectra": {
         "folders": [
-            ("/sdcard/Documents", True),
-            ("/sdcard/Download", True),
+            ("/sdcard/Spectra Geospatial Data", True),
+            ("/sdcard/Documents", False),
+            ("/sdcard/Download", False),
             ("/sdcard/Pictures/Screenshots", False),
         ]
     }
@@ -98,6 +99,7 @@ EXTRA_BACKUP_EXTENSIONS = [
     ".dc",
     ".bin",
     ".rtcm",
-    ".crd"
+    ".crd",
+    ".gml"
 
 ]
